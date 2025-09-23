@@ -1,0 +1,57 @@
+---
+
+# Ma Base pour Debian 13
+# 22/09/2025 christian.pottier@univ-angers.fr
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: /usr/local/bin/madeb
+    copy:
+      content: |
+        #!/bin/bash
+        cd /opt/ansible/madeb13
+        bash madeb.sh
+        
+      dest: /usr/local/bin/madeb
+      mode: 0755
+
+  - name: /usr/local/bin/update_madeb
+    copy:
+      content: |
+        #!/bin/bash
+        cd /opt/ansible/madeb13
+        bash update_madeb13.sh
+        
+      dest: /usr/local/bin/update_madeb
+      mode: 0755
+
+  - import_tasks: tasks/base_depots.yml
+
+  - import_tasks: tasks/upgrade.yml
+
+  - import_tasks: tasks/base_outil.yml
+  
+  - import_tasks: tasks/base_accessoires.yml
+
+  - import_tasks: tasks/base_internet.yml
+
+  - import_tasks: tasks/base_bureautique.yml
+
+  - import_tasks: tasks/base_graphisme.yml
+
+  - import_tasks: tasks/base_sonvideo.yml
+
+  - import_tasks: tasks/base_jeux.yml
+
+  - import_tasks: tasks/hist_bashrc.yml
+
+  - import_tasks: tasks/conf_base.yml
+
+  - import_tasks: tasks/xfce.yml
+  
+  - import_tasks: tasks/deb_perso.yml
+
+  - import_tasks: tasks/profile_firefox.yml
+

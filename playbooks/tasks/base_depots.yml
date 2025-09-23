@@ -1,0 +1,9 @@
+---
+
+# madeb #
+
+- name: /etc/apt/sources.list
+  copy:
+    src: sources.list
+    dest: /etc/apt/sources.list
+    mode: 0644

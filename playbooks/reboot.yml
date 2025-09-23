@@ -1,0 +1,10 @@
+---
+
+- hosts: deb
+  gather_facts: no
+  become: true
+  
+  tasks:
+
+  - name: Reboot
+    reboot:

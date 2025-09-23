@@ -1,0 +1,48 @@
+---
+
+- name: Test laptop
+  shell: laptop-detect 2>/dev/null
+  register: laptop
+  ignore_errors: true
+  changed_when: False
+
+- block:
+
+  - name: installation paquets tlp acpi
+    apt:
+      name:
+        - task-laptop
+        - tlp
+        - tlp-rdw
+        - acpi
+
+  - name: suppression numlock
+    apt:
+      name: numlockx
+      state: absent
+
+  - name: supp numlock dans lightdm.conf
+    replace:
+      path: /etc/lightdm/lightdm.conf
+      regexp: '/usr/bin/numlockx on'
+      replace: ''
+  - name: comment greeter-setup-script dans lightdm.conf
+    replace:
+      path: /etc/lightdm/lightdm.conf
+      regexp: '^greeter-setup-script='
+      replace: '#greeter-setup-script='
+
+  when: laptop is succeeded
+
+- block:
+  - name: numlock
+    apt:
+      name: numlockx
+      state: present
+  - name: Active numlock dans lightdm.conf
+    replace:
+      path: /etc/lightdm/lightdm.conf
+      regexp: '^#greeter-setup-script='
+      replace: 'greeter-setup-script=/usr/bin/numlockx on'
+
+  when: laptop is failed

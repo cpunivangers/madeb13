@@ -1,0 +1,8 @@
+#!/bin/sh
+ 
+# 04/2014
+# christian.pottier@univ-angers.fr
+
+# XFCE : Restauration automatique du tableau de bord
+mkdir ~/.config/autostart
+echo "[Desktop Entry]\nType=Application\nExec=rest_xfce" | tee ~/.config/autostart/rest_xfce.desktop

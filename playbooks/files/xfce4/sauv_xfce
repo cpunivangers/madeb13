@@ -1,0 +1,11 @@
+#!/bin/sh
+ 
+# 10/2017
+# christian.pottier@univ-angers.fr
+# XFCE
+#
+# sauve lxpanel (tableau de bord lxde)
+
+cd ~/.config
+rm xfce4.tar
+tar -cvf xfce4.tar xfce4

@@ -1,0 +1,22 @@
+---
+
+- name: Education | thonny ide python
+  apt:
+    state: latest
+    name:
+    - filius
+
+- name: Education | filius simulation réseau
+  apt:
+    state: latest
+    name:
+    - filius
+    default_release: bookworm-backports
+
+#~ - name: Education | anki carte d'apprentissage
+  #~ apt:
+    #~ state: latest
+    #~ name:
+    #~ - anki
+    
+

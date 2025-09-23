@@ -1,0 +1,44 @@
+---
+
+- name: xfce4 | xfce4-power-manager
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  xfconf:
+    channel: "{{ item.channel }}"
+    property: "{{ item.property }}"
+    value_type: "bool"
+    value: "false"
+  loop:
+    - channel: xfce4-session
+      property: /shutdown/LockScreen
+    - channel: xfce4-power-manager
+      property: /xfce4-power-manager/logind-handle-lid-switch
+    - channel: xfce4-power-manager
+      property: /xfce4-power-manager/lock-screen-suspend-hibernate
+      
+
+- name: xfce | gsettings set apps.light-locker '{{ ansible_facts.env.SUDO_USER }}'
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - key: /apps/light-locker/lock-on-suspend
+      value: false
+    - key: /apps/light-locker/lock-after-screensaver
+      value: 0
+
+# dconf write /org/gnome/calculator/refresh-interval 0
+- name: xfce | bug gnome-calculator freeze '{{ ansible_facts.env.SUDO_USER }}'
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - key: /org/gnome/calculator/refresh-interval
+      value: 0
+
+- name: xfce | dconf '{{ ansible_facts.env.SUDO_USER }}' to skel
+  copy:
+    src: '/home/{{ ansible_facts.env.SUDO_USER }}/.config/dconf'
+    dest: /etc/skel/.config/
+    remote_src: yes

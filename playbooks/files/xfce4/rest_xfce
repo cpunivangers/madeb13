@@ -1,0 +1,13 @@
+#!/bin/sh
+ 
+# 10/2017
+# christian.pottier@univ-angers.fr
+# XFCE
+#
+# restaure xfce4 (tableau de bord ...)
+
+if [ -f ~/.config/xfce4.tar ]; then
+	rm -rd ~/.cache/sessions
+	rm -rf ~/.config/xfce4
+	tar -xf ~/.config/xfce4.tar -C ~/.config/
+fi

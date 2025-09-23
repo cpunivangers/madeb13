@@ -1,0 +1,156 @@
+---
+
+- name: installation des paquets pour XFCE
+  apt:
+    state: present
+    name:
+    # Xfce
+    #~ - gtk3-engines-xfce
+    - gtk3-engines-breeze
+    - gtk2-engines
+#indisponible      - xfwm4-themes
+    - xfce4-terminal
+    - xfce4-goodies
+    - xfce4-whiskermenu-plugin
+    - xfce4-panel-profiles
+    # icon-theme
+    - numix-gtk-theme
+    - numix-icon-theme
+    - numix-icon-theme-circle
+    - deepin-icon-theme
+    - faenza-icon-theme
+    - gnome-brave-icon-theme
+    - arc-theme
+    # Configuration lightdm
+    - lightdm-gtk-greeter-settings
+    # Editeur de texte léger
+    - mousepad
+    # Calculatrice
+    #~deb12 - galculator
+    - gnome-calculator
+    - gnome-system-log
+  tags: xfce
+
+#deb12 OBSOLETE- import_tasks: mate-utils.yml
+
+# Configuarion xfce
+- name: conf_xfce
+  copy:
+    src: xfce4/conf_xfce.sh
+    dest: /usr/local/bin/conf_xfce
+    mode: 0755
+  tags: xfce
+
+- name: sauv_xfce
+  copy:
+    src: xfce4/sauv_xfce
+    dest: /usr/local/bin/
+    mode: 0755
+  tags: xfce
+
+- name: rest_xfce
+  copy:
+    src: xfce4/rest_xfce
+    dest: /usr/local/bin/
+    mode: 0755
+  tags: xfce
+
+- name: rest_xfce_auto
+  copy:
+    src: xfce4/rest_xfce_auto
+    dest: /usr/local/bin/
+    mode: 0755
+  tags: xfce
+
+- name: Desactive automount gvfs pour thunar = gain 30s à l 1ère ouverture thunar
+  ini_file:
+    path: /usr/share/gvfs/mounts/network.mount
+    section: Mount
+    option: AutoMount
+    value: 'false'
+    no_extra_spaces: yes
+#    regexp: 'AutoMount=true'
+#    replace: 'AutoMount=false'
+  tags: xfce
+
+#~ - name: Fond écran DF ?
+  #~ stat:
+    #~ path: /usr/share/backgrounds/xfce/dfwall-group-par_bonyred.jpg
+  #~ register: dfwall
+  
+#~ - name: Fond écran DF | lien vers DF wall
+  #~ file:
+    #~ src: /usr/share/backgrounds/xfce/dfwall-group-par_bonyred.jpg
+    #~ dest: /usr/share/images/desktop-base/default
+    #~ state: link
+    #~ force: yes
+  #~ when: dfwall.stat.exists
+  
+- name: DEB12 Fond écran Debian ?
+  stat:
+    path: /usr/share/backgrounds/xfce/Debian12-login.png
+  register: dfwall
+  
+- name: Fond écran DF | lien vers DF wall
+  file:
+    src: /usr/share/backgrounds/xfce/Debian12-login.png
+    dest: /usr/share/images/desktop-base/default
+    state: link
+    force: yes
+  when: dfwall.stat.exists
+
+# Configuarion xfce
+
+- name: /etc/skel/.config
+  file:
+    path: /etc/skel/.config
+    state: directory
+    
+- name: copy xfce4.tar skel
+  copy:
+    src: xfce4/xfce4.tar
+    dest: /etc/skel/.config/
+
+- name: xfce4 skel
+  unarchive:
+    src: /etc/skel/.config/xfce4.tar
+    dest: /etc/skel/.config/
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: /home/{{ ansible_facts.env.SUDO_USER }}/.config
+  file:
+    path: /home/{{ ansible_facts.env.SUDO_USER }}/.config
+    state: directory
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+
+- name: copy xfce4.tar user {{ ansible_facts.env.SUDO_USER }}
+  copy:
+    src: xfce4/xfce4.tar
+    dest: /home/{{ ansible_facts.env.SUDO_USER }}/.config/
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+
+- name: /home/{{ ansible_facts.env.SUDO_USER }}/.config/xfce4 existe
+  stat:
+    path: /home/{{ ansible_facts.env.SUDO_USER }}/.config/xfce4
+  register: dir_xfce4
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  
+- name: xfce4
+  unarchive:
+    src: ~/.config/xfce4.tar
+    dest: ~/.config/
+    remote_src: yes
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  when: not dir_xfce4.stat.exists
+  
+- import_tasks: xdg-user-dirs.yml
+
+- import_tasks: thunar_uca.yml
+
+- import_tasks: xfce4-power-manager.yml           
