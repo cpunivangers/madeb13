@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Assistance tmate
+Comment=Assistance chris.pottier@free.fr
+Exec=assistance-tmate
+Icon=help-browser
+Path=
+Terminal=true
+StartupNotify=false
+Categories=Application;System;
+

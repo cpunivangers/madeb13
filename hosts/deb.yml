@@ -1,0 +1,6 @@
+---
+ansible_connection: ssh
+#ansible_ssh_user: bonjour
+#ansible_ssh_pass: Bonjour
+ansible_become_method: sudo
+#ansible_become_pass: '{{ansible_ssh_pass}}'

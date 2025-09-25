@@ -1,0 +1,136 @@
+---
+
+- name: installation des paquets pour XFCE
+  apt:
+    state: present
+    name:
+    # Xfce
+    #~ - gtk3-engines-xfce # deb13 absent
+    #~ - gtk3-engines-breeze # deb13 absent
+    - gtk2-engines
+#indisponible      - xfwm4-themes
+    - xfce4-terminal
+    - xfce4-goodies
+    - xfce4-whiskermenu-plugin
+    - xfce4-panel-profiles
+    # icon-theme
+    - numix-gtk-theme
+    - numix-icon-theme
+    - numix-icon-theme-circle
+    - deepin-icon-theme
+    - faenza-icon-theme
+    - gnome-brave-icon-theme
+    - arc-theme
+    # Configuration lightdm
+    - lightdm-gtk-greeter-settings
+    # Editeur de texte léger
+    - mousepad
+    # Calculatrice
+    - gnome-calculator
+    #~ - gnome-system-log # deb13 absent
+  tags: xfce
+
+- name: Desactive automount gvfs pour thunar = gain 30s à l 1ère ouverture thunar
+  ini_file:
+    path: /usr/share/gvfs/mounts/network.mount
+    section: Mount
+    option: AutoMount
+    value: 'false'
+    no_extra_spaces: yes
+  tags: xfce
+ 
+#~ - name: DEB12 Fond écran Debian ?
+  #~ stat:
+    #~ path: /usr/share/backgrounds/xfce/Debian12-login.png
+  #~ register: dfwall
+  
+#~ - name: Fond écran DF | lien vers DF wall
+  #~ file:
+    #~ src: /usr/share/backgrounds/xfce/Debian12-login.png
+    #~ dest: /usr/share/images/desktop-base/default
+    #~ state: link
+    #~ force: yes
+  #~ when: dfwall.stat.exists
+
+# Configuarion bureau xfce
+
+- name: /etc/skel/.config
+  file:
+    path: /etc/skel/.config
+    state: directory
+
+- name: copy xfce4_madeb.tar.bz2 skel
+  copy:
+    src: xfce4/xfce4_madeb.tar.bz2
+    dest: /etc/skel/.config/
+    
+- name: copy xfce4-panel_madeb.tar.bz2 skel
+  copy:
+    src: xfce4/xfce4-panel_madeb.tar.bz2
+    dest: /etc/skel/.config/
+
+# maj du panel utilisation de l'outil : xfce4-panel-profiles load xfce4-panel_madeb.tar.bz2
+- name: xfce4 skel
+  unarchive:
+    src: /etc/skel/.config/xfce4_madeb.tar.bz2
+    dest: /etc/skel/.config/
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: /home/{{ ansible_facts.env.SUDO_USER }}/.config
+  file:
+    path: /home/{{ ansible_facts.env.SUDO_USER }}/.config
+    state: directory
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+
+- name: copy xfce4_madeb.tar.bz2 user {{ ansible_facts.env.SUDO_USER }}
+  copy:
+    src: xfce4/xfce4_madeb.tar.bz2
+    dest: /home/{{ ansible_facts.env.SUDO_USER }}/.config/
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+
+- name: copy xfce4-panel_madeb.tar.bz2 user {{ ansible_facts.env.SUDO_USER }}
+  copy:
+    src: xfce4/xfce4-panel_madeb.tar.bz2
+    dest: /home/{{ ansible_facts.env.SUDO_USER }}/.config/
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+    
+- name: /home/{{ ansible_facts.env.SUDO_USER }}/.config/xfce4 existe
+  stat:
+    path: /home/{{ ansible_facts.env.SUDO_USER }}/.config/xfce4
+  register: dir_xfce4
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+
+- name: xfce4 {{ ansible_facts.env.SUDO_USER }}
+  unarchive:
+    src: ~/.config/xfce4_madeb.tar.bz2
+    dest: ~/.config/
+    remote_src: yes
+    owner: '{{ ansible_facts.env.SUDO_USER }}'
+    group: '{{ ansible_facts.env.SUDO_USER }}'
+  become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  when: not dir_xfce4.stat.exists
+    
+#~ - name: xfce4 maj panel
+  #~ shell: xfce4-panel-profiles load ~/.config/xfce4-panel_madeb.tar.bz2
+  #~ become_user: '{{ ansible_facts.env.SUDO_USER }}'
+  #~ when: not dir_xfce4.stat.exists
+
+#~ - name: copy xfce4 {{ ansible_facts.env.SUDO_USER }} skel
+  #~ copy:
+    #~ src: /home/{{ ansible_facts.env.SUDO_USER }}/.config/xfce4
+    #~ dest: /etc/skel/.config/
+    #~ remote_src: yes
+    #~ owner: root
+    #~ group: root
+  #~ when: not dir_xfce4.stat.exists
+  
+- import_tasks: xdg-user-dirs.yml
+
+- import_tasks: thunar_uca.yml
+
+- import_tasks: xfce4-power-manager.yml           

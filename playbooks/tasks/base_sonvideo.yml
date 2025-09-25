@@ -1,0 +1,64 @@
+---
+# inutile de13 ?
+#~ - name: installation des paquets Son pipewire-audio bpo
+  #~ apt:
+    #~ state: latest
+    #~ name:
+    #~ - pipewire-audio
+    #~ - gstreamer1.0-pipewire
+    #~ default_release: bookworm-backports
+    
+- name: installation des paquets Son Video
+  apt:
+    state: present
+    name:
+    # Controle du son
+    # remplacement pulseaudio par pipewire
+    #~ - pulseaudio
+    #~ - paprefs
+    - pulseaudio-utils
+    - pavucontrol   
+    - pavucontrol-qt-l10n
+    # Multimédia
+    - vlc
+    - mpv
+    - vlc-plugin-pipewire
+    - vlc-plugin-bittorrent
+    - ffmpeg
+    - mediainfo
+    # Lecteur de musique
+    #~ - quodlibet
+    # Codecs gstreamer1.0
+    - libgstreamer1.0-0
+    - gstreamer1.0-plugins-base
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-plugins-ugly
+    - gstreamer1.0-libav
+    #~ - gstreamer1.0-doc
+    - gstreamer1.0-tools
+    - gstreamer1.0-x
+    - gstreamer1.0-alsa
+    - gstreamer1.0-gl
+    - gstreamer1.0-gtk3
+    - gstreamer1.0-qt5
+    - gstreamer1.0-pulseaudio
+    # Autres codecs
+    - x264
+    - wavpack
+    - flac
+    - libdvdread8
+    # Extracteur CD
+    - asunder
+    - lame
+    # Convertisseur audio
+    - soundconverter
+    # Graveur CD DVD
+#    - xfburn
+    # test Webcam
+    - cheese
+    # Permet le changement de configuration de la webcam
+    - guvcview
+    - v4l-utils
+
+- import_tasks: libdvdcss2.yml

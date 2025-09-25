@@ -1,0 +1,4 @@
+#!/bin/sh
+ 
+cd /opt/ansible/madeb12
+bash madeb.sh
