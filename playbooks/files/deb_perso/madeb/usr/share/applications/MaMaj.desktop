@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MaMaj
+Comment=Maj système + ...
+Exec=MaMaj
+Icon=software-update-available
+Path=
+Terminal=true
+StartupNotify=false
+Categories=Application;System;

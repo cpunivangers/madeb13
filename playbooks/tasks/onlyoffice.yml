@@ -1,0 +1,17 @@
+---
+
+- name: OnlyOffice | import apt key
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: CB2DE8E5
+    state: present
+
+- name: OnlyOffice | depot
+  apt_repository:
+    repo: deb https://download.onlyoffice.com/repo/debian squeeze main
+    filename: onlyoffice-desktopeditors
+    state: present
+
+- name: OnlyOffice | install OnlyOffice
+  apt:
+    name: onlyoffice-desktopeditors
