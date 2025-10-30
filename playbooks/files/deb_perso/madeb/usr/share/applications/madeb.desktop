@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=madeb - Installation
+Comment=Installation compléments Debian
+Exec=madeb
+Icon=madeb
+Path=
+Terminal=true
+StartupNotify=false
+Categories=madeb;

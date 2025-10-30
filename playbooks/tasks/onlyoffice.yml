@@ -1,0 +1,17 @@
+---
+
+- name: OnlyOffice | onlyoffice.gpg
+  get_url:
+    url: https://download.onlyoffice.com/GPG-KEY-ONLYOFFICE
+    dest: /usr/share/keyrings/onlyoffice.gpg
+    mode: ugo+rw
+    
+- name: OnlyOffice | depot
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/onlyoffice.gpg] https://download.onlyoffice.com/repo/debian squeeze main
+    filename: onlyoffice-desktopeditors
+    state: present
+
+- name: OnlyOffice | install OnlyOffice
+  apt:
+    name: onlyoffice-desktopeditors

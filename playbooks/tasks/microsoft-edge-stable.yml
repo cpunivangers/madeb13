@@ -1,0 +1,24 @@
+---
+
+- name: Microsoft Edge stable  | gpg
+  get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /usr/share/keyrings/microsoft-edge.gpg
+    mode: ugo+rw
+    
+- name: Microsoft Edge stable | depot
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main
+    filename: microsoft-edge
+    state: present
+
+- name: Microsoft Edge stable | install
+  apt:
+    name: microsoft-edge-stable
+
+- name: Microsoft Edge stable | alternative x-www-browser priority -10
+  shell: |
+    update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/microsoft-edge-stable -10
+    update-alternatives --auto x-www-browser
+    update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/microsoft-edge-stable -10
+    update-alternatives --install /usr/bin/microsoft-edge microsoft-edge /usr/bin/microsoft-edge-stable -10

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=madeb - update
+Comment=Mise à jour madeb
+Exec=update_madeb
+Icon=software-update-available
+Path=
+Terminal=true
+StartupNotify=false
+Categories=madeb;
