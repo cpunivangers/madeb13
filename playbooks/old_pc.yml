@@ -1,0 +1,36 @@
+---
+# Pour les machines anciennes
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Suppression logiciels
+    apt:
+      state: absent
+      name:
+      - hardinfo2
+      - iperf3
+      - modemmanager
+
+  - name: Arreter les services
+    ansible.builtin.systemd:
+      name: "{{ item }}"
+      state: stopped
+      enabled: false
+      loop:
+      - ModemManager.service
+      - cups-browsed.service
+      - avahi-daemon.service
+      ignoreerrors: yes
+    
+# Désactivation de quelques services inutiles ModemManager, cups-browsed, avahi-daemon :
+
+#sudo systemctl list-unit-files --type service --state enabled
+#sudo systemctl stop ModemManager.service
+#sudo systemctl disable ModemManager.service
+#sudo systemctl stop cups-browsed.service
+#sudo systemctl disable cups-browsed.service
+#sudo systemctl stop avahi-daemon.service
+#sudo systemctl disable avahi-daemon.service
+```
