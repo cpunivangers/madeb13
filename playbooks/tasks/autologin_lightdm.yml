@@ -1,0 +1,19 @@
+---
+
+- name: autologin lightdm
+  lineinfile:
+    path: /etc/lightdm/lightdm.conf
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+  - regexp: autologin-user=
+    line: autologin-user={{ ansible_facts.env.SUDO_USER }}
+  - regexp: autologin-user-timeout=
+    line: autologin-user-timeout=0  
+  register: result
+
+- name: suppresssion light-locker (verrouillage)
+  apt:
+    state: absent
+    name:
+    - light-locker
